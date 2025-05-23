@@ -6,5 +6,8 @@
     "warehouse_inventory20250521143210.csv": "restored from warehouse_inventory20250520152548.csv",
     "warehouse_inventory20250520152658.csv": "Cornflakes removed from the inventory",
     "warehouse_inventory20250520152548.csv": "Cornflakes added to the inventory",
-    "warehouse_inventory20250521143118.csv": "Testitem added to the inventory"
+    "warehouse_inventory20250521143118.csv": "Testitem added to the inventory",
+    "warehouse_inventory20250523143548.csv": "test test test test comment",
+    "warehouse_inventory20250523144554.csv": "restored from warehouse_inventory20250520152548.csv",
+    "warehouse_inventory20250523145027.csv": "restored from warehouse_inventory20250520152548.csv"
 }

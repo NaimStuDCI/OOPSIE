@@ -1,5 +1,6 @@
-import json
+import json, os, shutil
 from datetime import datetime
+from userauth import authenticate_user
 
 class Version():
 
@@ -38,13 +39,42 @@ class VersionManager:
             dummy_date = datetime.strptime(timestamp, "%Y%m%d%H%M%S")
             timestamp = dummy_date.strftime("%d. %B %Y, %H:%M:%S")
             print(f"{index}: \"{version.comment}\" created at {timestamp}")
-
     
-# testobject = Version("warehouse.csv", "comment")
-# print(testobject.version_filename())
+    def create_copie(self, filename):
+        """Creates a copy of the file with a timestamp."""
+        new_filename = filename[0:-4] + datetime.now().strftime("%Y%m%d%H%M%S" + ".csv")
+        if os.path.exists(filename):
+            shutil.copy(filename, f"{self.DIRECTORY}{new_filename}")
+        return new_filename
+    
+    def update_backups(self, filename, vscomment):
+        """Updates the backup history with a new entry."""
+        key_name = self.create_copie(filename)
+        self.history.append(Version(key_name, vscomment))
+        self.write_backups()
+        self.print_backups()
 
-# testobject = VersionManager()
-# for version in testobject.read_backups():
-#     print(version.filename, version.comment)
+    @authenticate_user
+    def restore_version(self, filename):
+        """Restores a version of the file from the backup history."""
+        print("\n")
+        
+        self.print_backups()
+        index = input("Enter the index of the backup you want to restore: ")
+        while not index.isdigit():
+            index = input("Enter the index of the backup you want to restore: ")
+        index = int(index)
+        if index < 1 or index > len(self.history):
+            print("Invalid index. Please try again.")
+            input()
+            return
+        version_filename = self.history[index - 1].filename
+        self.update_backups(filename, f"restored from {version_filename}")
+        shutil.copy(f"{self.DIRECTORY}{version_filename}", filename)
 
-# testobject.print_backups()
+
+testobject = VersionManager()
+for version in testobject.read_backups():
+    print(version.filename, version.comment)
+
+testobject.restore_version("warehouse_inventory.csv")
